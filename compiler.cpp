@@ -60,7 +60,7 @@ bool Compiler::import(std::string& filename, std::stringstream& outputcontent) {
 }
 
 bool Compiler::handleImports(std::string& filecontent, std::stringstream& outputcontent) {
-	int pos = filecontent.find('{'), end = (pos == std::string::npos ? -1 : 0);
+	int pos = filecontent.find('{'), end = 0;
 	while (pos != std::string::npos) {
 		outputcontent << filecontent.substr(end, pos - end);
 
@@ -70,8 +70,9 @@ bool Compiler::handleImports(std::string& filecontent, std::stringstream& output
 			return false;
 
 		pos = filecontent.find('{', pos + 1);
+		end++;
 	}
-	outputcontent << filecontent.substr(end + 1, filecontent.length());
+	outputcontent << filecontent.substr(end, filecontent.length());
 
 	return true;
 }
@@ -91,7 +92,7 @@ bool Compiler::save(std::string& outputcontent) {
 }
 
 bool Compiler::compileAndExecute(std::string& filename) {
-	std::cout << "Compiling: " << m_path + filename << '\n';
+	std::cout << "Compiling: " << filename << '\n';
 
 	this->m_path = filename.substr(0, filename.find_last_of('/') + 1);
 	std::ifstream in(filename);
@@ -132,12 +133,13 @@ void Compiler::execute(std::string& code) { // output.bf in src
 	std::stack<int> openLoopPos;
 	for (int i = 0; i < code.size(); i++) {
 		char c = code[i];
+		int count = 0;
 
 		switch (c) {
-		case '+': bytes[ind]++;										break;
-		case '-': bytes[ind]--;										break;
-		case '.': std::cout << bytes[ind];							break;
-		case ',': std::cout << "\n$ "; std::cin >> bytes[ind];		break;
+		case '+': bytes[ind]++;																	break;
+		case '-': bytes[ind]--;																	break;
+		case '.': std::cout << bytes[ind];														break;
+		case ',': std::cout << "\n$ "; int input; std::cin >> input; bytes[ind] = input;		break;
 
 		case '<':
 			if (ind == 0) {
@@ -163,7 +165,26 @@ void Compiler::execute(std::string& code) { // output.bf in src
 			}
 
 			break;
-		case '[': openLoopPos.push(i); break;
+		case '[': 
+			if (bytes[ind] != 0) {
+				openLoopPos.push(i); 
+				break;
+			}
+			count = 0;
+			for (int j = i + 1; j < code.size(); j++) {
+				if (code[j] == '[') {
+					count++;
+				}
+				else if (code[j] == ']') {
+					if (count == 0) {
+						i = j;
+						break;
+					}
+					count--;
+				}
+			}
+			break;
+
 		case ']':
 			if (bytes[ind] != 0)
 				i = openLoopPos.top();

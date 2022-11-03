@@ -144,8 +144,14 @@
     <ClCompile Include="compiler.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="src\import.bf" />
-    <None Include="src\main.bf" />
+    <None Include="src\mario\duplicate_cell.bf" />
+    <None Include="src\example\import.bf" />
+    <None Include="src\example\main.bf" />
+    <None Include="src\mario\print_acapo.bf" />
+    <None Include="src\mario\print_space.bf" />
+    <None Include="src\mario\save_hashtag.bf" />
+    <None Include="src\mario\mario.bf" />
+    <None Include="src\mario\print_line.bf" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="compiler.h" />

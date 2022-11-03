@@ -1,0 +1,29 @@
+[-
+	[-
+		>>>+>+<<<<
+	]
+	>>>>
+	[-
+		<<<<+>>>>
+	]
+	<
+	[-
+		>{print_space.bf}<
+	]
+	<<<
+	>>+
+	{duplicate_cell.bf}
+	>
+	[-
+		<<.>>
+	]
+	{print_space.bf}
+	<
+	{duplicate_cell.bf}
+	>
+	[-
+		<<.>>
+	]
+	{print_acapo.bf}
+	<<<
+]
